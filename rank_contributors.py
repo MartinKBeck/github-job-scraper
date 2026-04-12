@@ -19,8 +19,36 @@ load_dotenv()
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 INPUT_PATH = "contributor_profiles.json"
 ENRICHED_PATH = "enriched_output.txt"
+SEARCH_CONFIG_PATH = "search_config.json"
 JSON_OUTPUT_PATH = "top_50_contributors.json"
 MD_OUTPUT_PATH = "top_50_report.md"
+
+# Fallback role context when no search_config.json is present (original behavior)
+DEFAULT_ROLE_CONTEXT = {
+    "title": "RL / Computer Use Agent Engineer",
+    "key_skills": ["reinforcement learning", "LLM agents", "Python", "computer use"],
+    "description": (
+        "Engineer with experience in RL frameworks, LLM/agent work, and Python, "
+        "ideally with contributions to OpenClaw or similar open-source projects."
+    ),
+}
+
+
+def load_role_context() -> dict:
+    """Load role context from search_config.json or enriched data, with fallback."""
+    if os.path.exists(SEARCH_CONFIG_PATH):
+        with open(SEARCH_CONFIG_PATH) as f:
+            config = json.load(f)
+        if config.get("role_context"):
+            return config["role_context"]
+
+    if os.path.exists(ENRICHED_PATH):
+        with open(ENRICHED_PATH) as f:
+            data = json.load(f)
+        if data.get("role_context"):
+            return data["role_context"]
+
+    return DEFAULT_ROLE_CONTEXT
 
 SKILLSET_WEIGHT = 0.5
 HIREABILITY_WEIGHT = 0.3
@@ -88,15 +116,27 @@ def build_reassessment_context(profile: dict, enriched: dict | None) -> str:
     return "\n".join(parts)
 
 
-def reassess_contributor(client: anthropic.Anthropic, profile: dict, enriched: dict | None) -> dict:
+def reassess_contributor(
+    client: anthropic.Anthropic,
+    profile: dict,
+    enriched: dict | None,
+    role_context: dict | None = None,
+) -> dict:
     """Use Claude to re-assess hireability with $250k-$400k salary context."""
     context = build_reassessment_context(profile, enriched)
     context = context.encode("utf-8", errors="replace").decode("utf-8")
 
+    rc = role_context or DEFAULT_ROLE_CONTEXT
+    role_title = rc.get("title", "Software Engineer")
+    role_desc = rc.get("description", "")
+    key_skills = rc.get("key_skills", [])
+    skills_str = ", ".join(key_skills) if key_skills else "relevant technical skills"
+
     prompt = (
-        "You are a technical recruiter evaluating candidates for a startup building OpenClaw, "
-        "an open-source RL framework for training Computer Use agents. The position offers "
-        "$250,000 - $400,000 total compensation.\n\n"
+        f"You are a technical recruiter evaluating candidates for a {role_title} role. "
+        f"Role description: {role_desc} "
+        f"Key skills: {skills_str}. "
+        "The position offers $250,000 - $400,000 total compensation.\n\n"
         "Given the following candidate data, re-evaluate their hireability specifically "
         "considering this salary range and recruitment context:\n\n"
         "KEY FACTORS:\n"
@@ -106,7 +146,7 @@ def reassess_contributor(client: anthropic.Anthropic, profile: dict, enriched: d
         "  they show signs of being open to new opportunities\n"
         "- Early-career researchers finishing PhDs are prime candidates\n"
         "- People with public contact info (email, active profiles) are more accessible\n"
-        "- Contributors with deep domain expertise (RL, agents, LLMs) command this salary range\n"
+        f"- Contributors with deep domain expertise ({skills_str}) command this salary range\n"
         "- Consider whether the person would see this as a significant step up financially\n\n"
         "Return ONLY valid JSON with these fields:\n"
         "1. \"hireability\": object with:\n"
@@ -169,12 +209,18 @@ def compute_composite_score(skillset_score: int, hireability_score: int, locatio
     )
 
 
-def generate_ranked_json(ranked_candidates: list, total: int) -> dict:
+def generate_ranked_json(
+    ranked_candidates: list, total: int, role_context: dict | None = None
+) -> dict:
     """Build the final JSON output structure."""
+    rc = role_context or DEFAULT_ROLE_CONTEXT
+    role_title = rc.get("title", "Software Engineer")
+    skills_str = ", ".join(rc.get("key_skills", []))
     return {
         "ranking_criteria": {
             "salary_range": "$250k - $400k",
-            "target_skillset": "OpenClaw / RL / Computer Use Agents",
+            "target_role": role_title,
+            "target_skillset": skills_str or "See role description",
             "weights": {
                 "relevant_skillset": SKILLSET_WEIGHT,
                 "hireability": HIREABILITY_WEIGHT,
@@ -191,12 +237,17 @@ def generate_ranked_json(ranked_candidates: list, total: int) -> dict:
     }
 
 
-def generate_markdown_report(ranked_candidates: list, total: int) -> str:
+def generate_markdown_report(
+    ranked_candidates: list, total: int, role_context: dict | None = None
+) -> str:
     """Generate a polished markdown report."""
+    rc = role_context or DEFAULT_ROLE_CONTEXT
+    role_title = rc.get("title", "Software Engineer")
+    role_desc = rc.get("description", "")
     lines = []
 
     # Header
-    lines.append("# Top Contributor Ranking Report")
+    lines.append(f"# {role_title} — Top Contributor Ranking Report")
     lines.append("")
     lines.append(f"*Generated on {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}*")
     lines.append("")
@@ -205,11 +256,12 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
     lines.append("## Executive Summary")
     lines.append("")
     lines.append(
-        f"This report ranks **{total}** contributors from OpenClaw-related repositories "
-        f"based on their technical skillset relevance, hireability, and location for positions "
-        f"offering **$250,000 - $400,000** total compensation. Contributors were evaluated using "
-        f"a composite scoring algorithm that weights relevant skillset (50%), hireability (30%), "
-        f"and location (20%)."
+        f"This report ranks **{total}** contributors from targeted repositories "
+        f"based on their technical skillset relevance to the **{role_title}** role, "
+        f"hireability, and location for positions offering **$250,000 - $400,000** "
+        f"total compensation. Contributors were evaluated using a composite scoring "
+        f"algorithm that weights relevant skillset (50%), hireability (30%), and "
+        f"location (20%)."
     )
     lines.append("")
     if ranked_candidates:
@@ -355,6 +407,14 @@ def main():
     enriched_lookup = load_enriched_data(ENRICHED_PATH)
     print(f"  Loaded enriched data for {len(enriched_lookup)} contributors.")
 
+    # Load role context for dynamic prompts
+    role_context = load_role_context()
+    role_title = role_context.get("title", "Software Engineer")
+    print(f"  Role context: {role_title}")
+    if role_context.get("key_skills"):
+        print(f"  Key skills: {', '.join(role_context['key_skills'])}")
+    print()
+
     # Re-assess each contributor with salary context
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     ranked = []
@@ -365,7 +425,7 @@ def main():
         print(f"  Re-assessing {username}...")
 
         enriched = enriched_lookup.get(username)
-        reassessment = reassess_contributor(client, profile, enriched)
+        reassessment = reassess_contributor(client, profile, enriched, role_context)
 
         # Use original skillset score, updated hireability, and new location
         skillset_score = (profile.get("relevant_skillset") or {}).get("score") or 0
@@ -412,13 +472,13 @@ def main():
     total = len(ranked)
 
     # Write JSON output
-    output = generate_ranked_json(top_candidates, total)
+    output = generate_ranked_json(top_candidates, total, role_context)
     with open(JSON_OUTPUT_PATH, "w") as f:
         json.dump(output, f, indent=2)
     print(f"\nRanked JSON written to {JSON_OUTPUT_PATH}")
 
     # Write markdown report
-    md_report = generate_markdown_report(top_candidates, total)
+    md_report = generate_markdown_report(top_candidates, total, role_context)
     with open(MD_OUTPUT_PATH, "w") as f:
         f.write(md_report)
     print(f"Markdown report written to {MD_OUTPUT_PATH}")

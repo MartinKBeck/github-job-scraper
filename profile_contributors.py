@@ -18,8 +18,38 @@ load_dotenv()
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
 INPUT_PATH = "enriched_output.txt"
+SEARCH_CONFIG_PATH = "search_config.json"
 JSON_OUTPUT_PATH = "contributor_profiles.json"
 MD_OUTPUT_PATH = "contributor_profiles_report.md"
+
+# Fallback role context when no search_config.json is present (original behavior)
+DEFAULT_ROLE_CONTEXT = {
+    "title": "RL / Computer Use Agent Engineer",
+    "key_skills": ["reinforcement learning", "LLM agents", "Python", "computer use"],
+    "description": (
+        "Engineer with experience in RL frameworks, LLM/agent work, and Python, "
+        "ideally with contributions to OpenClaw or similar open-source projects."
+    ),
+}
+
+
+def load_role_context() -> dict:
+    """Load role context from search_config.json or enriched_output.txt, with fallback."""
+    # Try search_config.json first
+    if os.path.exists(SEARCH_CONFIG_PATH):
+        with open(SEARCH_CONFIG_PATH) as f:
+            config = json.load(f)
+        if config.get("role_context"):
+            return config["role_context"]
+
+    # Try role_context embedded in enriched_output.txt
+    if os.path.exists(INPUT_PATH):
+        with open(INPUT_PATH) as f:
+            data = json.load(f)
+        if data.get("role_context"):
+            return data["role_context"]
+
+    return DEFAULT_ROLE_CONTEXT
 
 
 def build_contributor_context(contributor: dict, repo_name: str) -> str:
@@ -75,24 +105,34 @@ def build_contributor_context(contributor: dict, repo_name: str) -> str:
     return "\n".join(parts)
 
 
-def profile_contributor(client: anthropic.Anthropic, contributor: dict, repo_name: str) -> dict:
+def profile_contributor(
+    client: anthropic.Anthropic,
+    contributor: dict,
+    repo_name: str,
+    role_context: dict | None = None,
+) -> dict:
     """Call Claude to generate a profile assessment for one contributor."""
     context = build_contributor_context(contributor, repo_name)
     # Sanitize surrogate characters
     context = context.encode("utf-8", errors="replace").decode("utf-8")
 
+    rc = role_context or DEFAULT_ROLE_CONTEXT
+    role_title = rc.get("title", "Software Engineer")
+    role_desc = rc.get("description", "")
+    key_skills = rc.get("key_skills", [])
+    skills_str = ", ".join(key_skills) if key_skills else "relevant technical skills"
+
     prompt = (
-        "You are evaluating contributors to OpenClaw-related open-source repositories. "
-        "OpenClaw is an open-source RL framework for training Computer Use agents via "
-        "natural language. It includes projects like OpenClaw-RL (core RL training), "
-        "HiClaw (multi-agent OS), and various community tools.\n\n"
+        f"You are evaluating contributors to open-source repositories for a "
+        f"{role_title} role.\n"
+        f"Role description: {role_desc}\n"
+        f"Key skills to evaluate: {skills_str}\n\n"
         "Given the following contributor data, produce a JSON object with these fields:\n"
         "1. \"profile_summary\": A 2-3 sentence profile summary of this person.\n"
         "2. \"relevant_skillset\": An object with:\n"
-        "   - \"score\" (integer 1-5): How relevant is this person's skillset to OpenClaw usage? "
-        "Score based on: RL experience, LLM/agent work, Python proficiency, contributions to "
-        "OpenClaw or similar projects, research in relevant areas (agent training, computer use, "
-        "diffusion LLMs, etc.)\n"
+        f"   - \"score\" (integer 1-5): How relevant is this person's skillset to the "
+        f"{role_title} role? Score based on: experience with {skills_str}, contributions "
+        "to relevant open-source projects, and research in related areas\n"
         "   - \"justification\": Brief explanation for the score\n"
         "3. \"hireability\": An object with:\n"
         "   - \"score\" (integer 1-5): How likely is this person to be open to recruitment? "
@@ -137,10 +177,12 @@ def profile_contributor(client: anthropic.Anthropic, contributor: dict, repo_nam
     }
 
 
-def generate_markdown_report(profiles: list) -> str:
+def generate_markdown_report(profiles: list, role_context: dict | None = None) -> str:
     """Generate a human-readable markdown report from the profile list."""
+    rc = role_context or DEFAULT_ROLE_CONTEXT
+    role_title = rc.get("title", "Software Engineer")
     lines = []
-    lines.append("# OpenClaw Contributor Profiles Report")
+    lines.append(f"# {role_title} — Contributor Profiles Report")
     lines.append("")
     lines.append(f"*Generated on {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M UTC')}*")
     lines.append("")
@@ -195,6 +237,14 @@ def main():
     with open(INPUT_PATH) as f:
         data = json.load(f)
 
+    # Load role context for dynamic prompts
+    role_context = data.get("role_context") or load_role_context()
+    role_title = role_context.get("title", "Software Engineer")
+    print(f"  Role context: {role_title}")
+    if role_context.get("key_skills"):
+        print(f"  Key skills: {', '.join(role_context['key_skills'])}")
+    print()
+
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     profiles = []
 
@@ -209,7 +259,7 @@ def main():
         for contributor in contributors:
             username = contributor.get("username", "?")
             print(f"  Profiling {username}...")
-            profile = profile_contributor(client, contributor, repo_name)
+            profile = profile_contributor(client, contributor, repo_name, role_context)
             profiles.append(profile)
             skill = profile.get("relevant_skillset", {}).get("score", "?")
             hire = profile.get("hireability", {}).get("score", "?")
@@ -222,7 +272,7 @@ def main():
     print(f"\nJSON profiles written to {JSON_OUTPUT_PATH}")
 
     # Write markdown report
-    md_report = generate_markdown_report(profiles)
+    md_report = generate_markdown_report(profiles, role_context)
     with open(MD_OUTPUT_PATH, "w") as f:
         f.write(md_report)
     print(f"Markdown report written to {MD_OUTPUT_PATH}")
