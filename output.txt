@@ -1,0 +1,438 @@
+{
+  "repo": {
+    "repositories": [
+      {
+        "name": "Gen-Verse/OpenClaw-RL",
+        "description": "OpenClaw-RL: Train any agent simply by talking",
+        "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+        "stars": 4822,
+        "language": "Python",
+        "forks": 504,
+        "followers": 34,
+        "contributor_count": 8,
+        "contributors": [
+          {
+            "username": "yinjjiew",
+            "profile_url": "https://github.com/yinjjiew"
+          },
+          {
+            "username": "YangLing0818",
+            "profile_url": "https://github.com/YangLing0818"
+          },
+          {
+            "username": "yzoaim",
+            "profile_url": "https://github.com/yzoaim"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "xuyangc03",
+            "profile_url": "https://github.com/xuyangc03"
+          },
+          {
+            "username": "zjysteven",
+            "profile_url": "https://github.com/zjysteven"
+          },
+          {
+            "username": "Jinxiaolong1129",
+            "profile_url": "https://github.com/Jinxiaolong1129"
+          },
+          {
+            "username": "Niujunbo2002",
+            "profile_url": "https://github.com/Niujunbo2002"
+          }
+        ]
+      },
+      {
+        "name": "agentscope-ai/HiClaw",
+        "description": "Anopen-source Collaborative Multi-Agent OS for transparent, human-in-the-loop task coordination via Matrix rooms.",
+        "url": "https://github.com/agentscope-ai/HiClaw",
+        "stars": 4053,
+        "language": "Shell",
+        "forks": 466,
+        "followers": 23,
+        "contributor_count": 28,
+        "contributors": [
+          {
+            "username": "johnlanni",
+            "profile_url": "https://github.com/johnlanni"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "max-wc",
+            "profile_url": "https://github.com/max-wc"
+          },
+          {
+            "username": "Jing-ze",
+            "profile_url": "https://github.com/Jing-ze"
+          },
+          {
+            "username": "googs1025",
+            "profile_url": "https://github.com/googs1025"
+          },
+          {
+            "username": "github-actions[bot]",
+            "profile_url": "https://github.com/apps/github-actions"
+          },
+          {
+            "username": "lexburner",
+            "profile_url": "https://github.com/lexburner"
+          },
+          {
+            "username": "luoxiner",
+            "profile_url": "https://github.com/luoxiner"
+          },
+          {
+            "username": "steverao",
+            "profile_url": "https://github.com/steverao"
+          },
+          {
+            "username": "codesssss",
+            "profile_url": "https://github.com/codesssss"
+          },
+          {
+            "username": "maplefeng-a",
+            "profile_url": "https://github.com/maplefeng-a"
+          },
+          {
+            "username": "CH3CHO",
+            "profile_url": "https://github.com/CH3CHO"
+          },
+          {
+            "username": "jacefu",
+            "profile_url": "https://github.com/jacefu"
+          },
+          {
+            "username": "nicholyx",
+            "profile_url": "https://github.com/nicholyx"
+          }
+        ]
+      },
+      {
+        "name": "1186258278/OpenClawChineseTranslation",
+        "description": "\ud83e\udd9e OpenClaw (Clawdbot/Moltbot) \u6c49\u5316\u7248 - \u5f00\u6e90\u4e2a\u4eba AI \u52a9\u624b\u4e2d\u6587\u7248 | Claude/ChatGPT LLM \u63a5\u5165 | WhatsApp/Telegram/Discord \u591a\u5e73\u53f0 | \u6bcf\u5c0f\u65f6\u81ea\u52a8\u540c\u6b65 | CLI + Dashboard \u5168\u4e2d\u6587\u2026",
+        "url": "https://github.com/1186258278/OpenClawChineseTranslation",
+        "stars": 3691,
+        "language": "JavaScript",
+        "forks": 457,
+        "followers": 18,
+        "contributor_count": 15,
+        "contributors": [
+          {
+            "username": "1186258278",
+            "profile_url": "https://github.com/1186258278"
+          },
+          {
+            "username": "myassistantChatGPT",
+            "profile_url": "https://github.com/myassistantChatGPT"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "codex[bot]",
+            "profile_url": "https://github.com/apps/codex"
+          },
+          {
+            "username": "gemini-ai",
+            "profile_url": "https://github.com/gemini-ai"
+          },
+          {
+            "username": "codex-ai",
+            "profile_url": "https://github.com/codex-ai"
+          },
+          {
+            "username": "GitHubCopilot",
+            "profile_url": "https://github.com/GitHubCopilot"
+          },
+          {
+            "username": "coderabbitai[bot]",
+            "profile_url": "https://github.com/apps/coderabbitai"
+          },
+          {
+            "username": "deepseek-coder",
+            "profile_url": "https://github.com/deepseek-coder"
+          },
+          {
+            "username": "devin-ai-integration[bot]",
+            "profile_url": "https://github.com/apps/devin-ai-integration"
+          },
+          {
+            "username": "copilot[bot]",
+            "profile_url": "https://github.com/apps/copilot"
+          },
+          {
+            "username": "claude-for-github[bot]",
+            "profile_url": "https://github.com/apps/claude-for-github"
+          },
+          {
+            "username": "cursoragent",
+            "profile_url": "https://github.com/cursoragent"
+          },
+          {
+            "username": "amazon-q-developer[bot]",
+            "profile_url": "https://github.com/apps/amazon-q-developer"
+          },
+          {
+            "username": "sisyphus-dev-ai",
+            "profile_url": "https://github.com/sisyphus-dev-ai"
+          }
+        ]
+      },
+      {
+        "name": "miaoxworld/OpenClawInstaller",
+        "description": "ClawdBot \u4e00\u952e\u90e8\u7f72\u5de5\u5177",
+        "url": "https://github.com/miaoxworld/OpenClawInstaller",
+        "stars": 3340,
+        "language": "Shell",
+        "forks": 465,
+        "followers": 16,
+        "contributor_count": 4,
+        "contributors": [
+          {
+            "username": "RobertDowneyForDev",
+            "profile_url": "https://github.com/RobertDowneyForDev"
+          },
+          {
+            "username": "miaoxworld",
+            "profile_url": "https://github.com/miaoxworld"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "Alex-wuhu",
+            "profile_url": "https://github.com/Alex-wuhu"
+          }
+        ]
+      },
+      {
+        "name": "KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh",
+        "description": "\u4ece\u96f6\u5230\u4f01\u4e1a\u5b9e\u6218\uff1aClaude Code \u5b98\u65b9\u7f16\u7a0b\u795e\u5668 + OpenClaw 224K Stars \u5f00\u6e90AI\u52a9\u624b | \u53cc\u9876\u6d41\u4e2d\u6587\u6559\u7a0b | 21\u7bc7\u6559\u7a0b 130000+\u5b57",
+        "url": "https://github.com/KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh",
+        "stars": 3188,
+        "language": null,
+        "forks": 611,
+        "followers": 23,
+        "contributor_count": 3,
+        "contributors": [
+          {
+            "username": "KimYx0207",
+            "profile_url": "https://github.com/KimYx0207"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "Wythehard",
+            "profile_url": "https://github.com/Wythehard"
+          }
+        ]
+      },
+      {
+        "name": "FreedomIntelligence/OpenClaw-Medical-Skills",
+        "description": "The largestopen-source medical AI skills library for OpenClaw\ud83e\udd9e.",
+        "url": "https://github.com/FreedomIntelligence/OpenClaw-Medical-Skills",
+        "stars": 1999,
+        "language": "Python",
+        "forks": 274,
+        "followers": 12,
+        "contributor_count": 7,
+        "contributors": [
+          {
+            "username": "WangRongsheng",
+            "profile_url": "https://github.com/WangRongsheng"
+          },
+          {
+            "username": "donglihe-hub",
+            "profile_url": "https://github.com/donglihe-hub"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "wabyking",
+            "profile_url": "https://github.com/wabyking"
+          },
+          {
+            "username": "haoyu-haoyu",
+            "profile_url": "https://github.com/haoyu-haoyu"
+          },
+          {
+            "username": "frankchenfu",
+            "profile_url": "https://github.com/frankchenfu"
+          },
+          {
+            "username": "dzx-cc",
+            "profile_url": "https://github.com/dzx-cc"
+          }
+        ]
+      },
+      {
+        "name": "clawsoftware/clawPDF",
+        "description": "OpenSource Virtual (Network) Printer for Windows that allows you to create PDFs, OCR text, and print images, with advanced features usua\u2026",
+        "url": "https://github.com/clawsoftware/clawPDF",
+        "stars": 1886,
+        "language": "C#",
+        "forks": 215,
+        "followers": 31,
+        "contributor_count": 2,
+        "contributors": [
+          {
+            "username": "hessandrew",
+            "profile_url": "https://github.com/hessandrew"
+          },
+          {
+            "username": "clawsoftware",
+            "profile_url": "https://github.com/clawsoftware"
+          }
+        ]
+      },
+      {
+        "name": "xmanrui/OpenClaw-bot-review",
+        "description": "A lightweight web dashboard for viewing all your OpenClaw Bots/Agents/Models/Sessions status at a glance.",
+        "url": "https://github.com/xmanrui/OpenClaw-bot-review",
+        "stars": 1785,
+        "language": "TypeScript",
+        "forks": 356,
+        "followers": 3,
+        "contributor_count": 3,
+        "contributors": [
+          {
+            "username": "xmanrui",
+            "profile_url": "https://github.com/xmanrui"
+          },
+          {
+            "username": "joker-bai",
+            "profile_url": "https://github.com/joker-bai"
+          },
+          {
+            "username": "yyy22335",
+            "profile_url": "https://github.com/yyy22335"
+          }
+        ]
+      },
+      {
+        "name": "openakita/openakita",
+        "description": "Anopen-source AI assistant framework with skills and agent architecture",
+        "url": "https://github.com/openakita/openakita",
+        "stars": 1615,
+        "language": "Python",
+        "forks": 209,
+        "followers": 10,
+        "contributor_count": 8,
+        "contributors": [
+          {
+            "username": "openakita",
+            "profile_url": "https://github.com/openakita"
+          },
+          {
+            "username": "SimYng",
+            "profile_url": "https://github.com/SimYng"
+          },
+          {
+            "username": "cursoragent",
+            "profile_url": "https://github.com/cursoragent"
+          },
+          {
+            "username": "PeilongHong",
+            "profile_url": "https://github.com/PeilongHong"
+          },
+          {
+            "username": "fzstack365",
+            "profile_url": "https://github.com/fzstack365"
+          },
+          {
+            "username": "Peilong-Hong",
+            "profile_url": "https://github.com/Peilong-Hong"
+          },
+          {
+            "username": "faithleysath",
+            "profile_url": "https://github.com/faithleysath"
+          },
+          {
+            "username": "haosenwang1018",
+            "profile_url": "https://github.com/haosenwang1018"
+          }
+        ]
+      },
+      {
+        "name": "iamlukethedev/Claw3D",
+        "description": "Claw3D is anopensource 3D engine built on OpenClaw for creating games, simulations, and high-performance 3D applications.",
+        "url": "https://github.com/iamlukethedev/Claw3D",
+        "stars": 1267,
+        "language": "TypeScript",
+        "forks": 298,
+        "followers": 19,
+        "contributor_count": 14,
+        "contributors": [
+          {
+            "username": "iamlukethedev",
+            "profile_url": "https://github.com/iamlukethedev"
+          },
+          {
+            "username": "lukesmart123",
+            "profile_url": "https://github.com/lukesmart123"
+          },
+          {
+            "username": "robotica4us-collab",
+            "profile_url": "https://github.com/robotica4us-collab"
+          },
+          {
+            "username": "gsknnft",
+            "profile_url": "https://github.com/gsknnft"
+          },
+          {
+            "username": "cursoragent",
+            "profile_url": "https://github.com/cursoragent"
+          },
+          {
+            "username": "claude",
+            "profile_url": "https://github.com/claude"
+          },
+          {
+            "username": "asimons81",
+            "profile_url": "https://github.com/asimons81"
+          },
+          {
+            "username": "dependabot[bot]",
+            "profile_url": "https://github.com/apps/dependabot"
+          },
+          {
+            "username": "yusupsupriyadi",
+            "profile_url": "https://github.com/yusupsupriyadi"
+          },
+          {
+            "username": "eliaspfeffer",
+            "profile_url": "https://github.com/eliaspfeffer"
+          },
+          {
+            "username": "AdminExcellenc3",
+            "profile_url": "https://github.com/AdminExcellenc3"
+          },
+          {
+            "username": "Copilot",
+            "profile_url": "https://github.com/apps/copilot-swe-agent"
+          },
+          {
+            "username": "emiliovos",
+            "profile_url": "https://github.com/emiliovos"
+          },
+          {
+            "username": "ThankNIXlater",
+            "profile_url": "https://github.com/ThankNIXlater"
+          }
+        ]
+      }
+    ]
+  }
+}
