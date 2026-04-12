@@ -3,6 +3,7 @@ import base64
 import os
 import json
 import re
+from pathlib import Path
 from urllib.parse import quote_plus
 import requests
 from bs4 import BeautifulSoup
@@ -201,7 +202,7 @@ def enrich_repository(repo: dict) -> dict:
 
     counter = contrib_soup.select_one("span.Counter")
     repo["contributor_count"] = (
-        int(counter["title"]) if counter and counter.get("title") else None
+        int(counter["title"].replace(",", "")) if counter and counter.get("title") else None
     )
 
     NON_HUMAN = {
@@ -276,13 +277,24 @@ def parse_repositories(html: str) -> dict:
     return {"repositories": repositories}
 
 
+SEARCH_CONFIG_PATH = "search_config.json"
+
+
+def load_search_config(path: str) -> dict | None:
+    """Load search_config.json produced by determine_search.py, if it exists."""
+    if not Path(path).exists():
+        return None
+    with open(path) as f:
+        return json.load(f)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Scrape GitHub repository search results.")
     parser.add_argument(
         "query",
         nargs="?",
-        default="open claw",
-        help="Search term(s) to query on GitHub (default: 'open claw')",
+        default=None,
+        help="Search term(s) to query on GitHub. If omitted, reads from search_config.json.",
     )
     parser.add_argument(
         "--limit",
@@ -291,29 +303,81 @@ if __name__ == "__main__":
         metavar="N",
         help="Only enrich the first N repositories (useful for testing)",
     )
+    parser.add_argument(
+        "--config",
+        default=SEARCH_CONFIG_PATH,
+        help=f"Path to search config JSON from determine_search.py (default: {SEARCH_CONFIG_PATH})",
+    )
     args = parser.parse_args()
 
-    target_url = (
-        f"https://github.com/search?q={quote_plus(args.query)}"
-        f"&type=repositories&s=stars&o=desc"
-    )
+    # --- Resolve search queries: CLI arg, search_config.json, or default ---
+    search_config = load_search_config(args.config)
+    role_context = None
 
-    print(f"Scraping: {target_url}\n")
-    result = scrape_github(target_url)
+    if args.query:
+        # Explicit CLI query takes priority
+        queries = [{"query": args.query, "description": "CLI argument"}]
+    elif search_config:
+        queries = search_config.get("search_queries", [])
+        role_context = search_config.get("role_context")
+        strategy = search_config.get("strategy", "skill")
+        print(f"Loaded search config ({strategy} strategy) with {len(queries)} queries.")
+        if role_context:
+            print(f"  Role: {role_context.get('title', 'N/A')}")
+            print(f"  Profile: {role_context.get('description', 'N/A')}")
+        print()
+    else:
+        # Fallback to the original default
+        queries = [{"query": "open claw", "description": "Default search"}]
 
-    html_content = result["results"][0]["content"]
-    parsed = parse_repositories(html_content)
+    if not queries:
+        print("No search queries found. Provide a query or run determine_search.py first.")
+        raise SystemExit(1)
 
-    repos = parsed["repositories"]
+    # --- Run all search queries and aggregate results ---
+    all_repos = []
+    for sq in queries:
+        q = sq["query"]
+        target_url = (
+            f"https://github.com/search?q={quote_plus(q)}"
+            f"&type=repositories&s=stars&o=desc"
+        )
+
+        print(f"Scraping: {target_url}")
+        print(f"  ({sq.get('description', '')})")
+        result = scrape_github(target_url)
+
+        html_content = result["results"][0]["content"]
+        parsed = parse_repositories(html_content)
+        found = parsed["repositories"]
+        print(f"  Found {len(found)} repositories.\n")
+        all_repos.extend(found)
+
+    # Deduplicate by repo name (keep first occurrence)
+    seen = set()
+    unique_repos = []
+    for repo in all_repos:
+        if repo["name"] and repo["name"] not in seen:
+            seen.add(repo["name"])
+            unique_repos.append(repo)
+
+    repos = unique_repos
     if args.limit:
         repos = repos[: args.limit]
 
-    print(f"Found {len(parsed['repositories'])} repositories. Enriching {len(repos)}...\n")
+    print(f"Total unique repositories: {len(unique_repos)}. Enriching {len(repos)}...\n")
     for repo in repos:
         enrich_repository(repo)
 
+    # Build output with role_context for downstream pipeline steps
+    output_data = {"repositories": repos}
+    if role_context:
+        output_data["role_context"] = role_context
+
     output_path = "output.txt"
     with open(output_path, "w") as f:
-        json.dump(parsed, f, indent=2)
+        json.dump(output_data, f, indent=2)
 
     print(f"\nDone. Response written to {output_path}")
+    if role_context:
+        print(f"  Role context included for downstream pipeline steps.")
