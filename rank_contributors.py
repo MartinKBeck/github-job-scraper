@@ -309,9 +309,9 @@ def main():
         reassessment = reassess_contributor(client, profile, enriched)
 
         # Use original skillset score, updated hireability
-        skillset_score = profile.get("relevant_skillset", {}).get("score", 0)
-        new_hireability = reassessment.get("hireability", {})
-        hireability_score = new_hireability.get("score", 0)
+        skillset_score = (profile.get("relevant_skillset") or {}).get("score") or 0
+        new_hireability = reassessment.get("hireability") or {}
+        hireability_score = new_hireability.get("score") or 0
         composite = compute_composite_score(skillset_score, hireability_score)
 
         candidate = {
