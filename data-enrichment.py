@@ -30,11 +30,9 @@ OXYLABS_USERNAME = os.getenv("OXYLABS_USERNAME")
 OXYLABS_PASSWORD = os.getenv("OXYLABS_PASSWORD")
 OXYLABS_URL = "https://realtime.oxylabs.io/v1/queries"
 
-# Enrich Layer rate limiting — defaults to 2 requests/min (free tier).
-# Override via ENRICHLAYER_REQUESTS_PER_MINUTE env var for higher tiers.
-ENRICHLAYER_REQUESTS_PER_MINUTE = int(
-    os.getenv("ENRICHLAYER_REQUESTS_PER_MINUTE", "2")
-)
+# Enrich Layer rate limiting — set to 2 requests/min (free tier).
+# Increase this value if your Enrich Layer pay tier allows more requests.
+ENRICHLAYER_REQUESTS_PER_MINUTE = 2
 
 INPUT_PATH = "output.txt"
 OUTPUT_PATH = "enriched_output.txt"
