@@ -176,7 +176,7 @@ def _enrichlayer_resolve(first_name: str, last_name: str, pro_info: dict) -> dic
     Call the Enrich Layer Person Lookup endpoint with structured params.
     Returns the API response dict, or None on failure.
     """
-    company_domain = pro_info.get("company_domain") or pro_info.get("company") or ""
+    company_domain = pro_info.get("company_domain") or ""
     if not company_domain:
         return None
 
