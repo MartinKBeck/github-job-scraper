@@ -13,6 +13,8 @@
 import json
 import os
 import re
+import time
+from collections import deque
 from datetime import date
 from urllib.parse import quote_plus, unquote
 import anthropic
@@ -28,8 +30,54 @@ OXYLABS_USERNAME = os.getenv("OXYLABS_USERNAME")
 OXYLABS_PASSWORD = os.getenv("OXYLABS_PASSWORD")
 OXYLABS_URL = "https://realtime.oxylabs.io/v1/queries"
 
+# Enrich Layer rate limiting — set to 2 requests/min (free tier).
+# Increase this value if your Enrich Layer pay tier allows more requests.
+ENRICHLAYER_REQUESTS_PER_MINUTE = 2
+
 INPUT_PATH = "output.txt"
 OUTPUT_PATH = "enriched_output.txt"
+
+
+class RateLimiter:
+    """Simple sliding-window rate limiter.
+
+    Tracks the timestamps of the last *max_requests* calls within a
+    rolling *window_seconds* period.  When the window is full, ``wait()``
+    sleeps just long enough for the oldest call to fall outside the window
+    before returning.
+    """
+
+    def __init__(self, max_requests: int, window_seconds: float = 60.0):
+        self.max_requests = max_requests
+        self.window_seconds = window_seconds
+        self._timestamps: deque[float] = deque()
+
+    def wait(self) -> None:
+        """Block until a new request is allowed, then record it."""
+        now = time.monotonic()
+
+        # Discard timestamps that have fallen outside the window
+        while self._timestamps and now - self._timestamps[0] >= self.window_seconds:
+            self._timestamps.popleft()
+
+        if len(self._timestamps) >= self.max_requests:
+            sleep_for = self.window_seconds - (now - self._timestamps[0])
+            if sleep_for > 0:
+                print(f"      Rate limit: sleeping {sleep_for:.1f}s to stay within "
+                      f"{self.max_requests} req/{self.window_seconds:.0f}s")
+                time.sleep(sleep_for)
+            # After sleeping, prune again
+            now = time.monotonic()
+            while self._timestamps and now - self._timestamps[0] >= self.window_seconds:
+                self._timestamps.popleft()
+
+        self._timestamps.append(time.monotonic())
+
+
+_enrichlayer_limiter = RateLimiter(
+    max_requests=ENRICHLAYER_REQUESTS_PER_MINUTE,
+    window_seconds=60.0,
+)
 
 
 def scrape_url(url: str) -> str:
@@ -241,6 +289,7 @@ def _enrichlayer_resolve(first_name: str, last_name: str, pro_info: dict) -> dic
         params["location"] = pro_info["location"]
 
     print(f"      Enrich Layer lookup: {first_name} {last_name} @ {company_domain}")
+    _enrichlayer_limiter.wait()
     resp = requests.get(
         "https://enrichlayer.com/api/v2/profile/resolve",
         headers={"Authorization": f"Bearer {ENRICHLAYER_API_KEY}"},
@@ -274,6 +323,7 @@ def _enrichlayer_email_lookup(email: str) -> dict:
     }
 
     print(f"      Enrich Layer email lookup: {email}")
+    _enrichlayer_limiter.wait()
     resp = requests.get(
         "https://enrichlayer.com/api/v2/profile/resolve/email",
         headers={"Authorization": f"Bearer {ENRICHLAYER_API_KEY}"},
@@ -390,6 +440,7 @@ def enrich_from_linkedin(contributor: dict) -> dict:
         if ENRICHLAYER_API_KEY:
             try:
                 print("      Enriching found profile via Enrich Layer...")
+                _enrichlayer_limiter.wait()
                 resp = requests.get(
                     "https://enrichlayer.com/api/v2/profile",
                     headers={"Authorization": f"Bearer {ENRICHLAYER_API_KEY}"},
