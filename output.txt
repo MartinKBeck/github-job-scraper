@@ -1,0 +1,356 @@
+{
+  "repositories": [
+    {
+      "name": "Gen-Verse/OpenClaw-RL",
+      "description": "OpenClaw-RL: Train any agent simply by talking",
+      "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+      "stars": 4822,
+      "language": "Python",
+      "forks": 505,
+      "followers": 34,
+      "contributor_count": 8,
+      "contributors": [
+        {
+          "name": "Yinjie Wang",
+          "username": "yinjjiew",
+          "profile_url": "https://github.com/yinjjiew",
+          "commits_to_repo": 159,
+          "bio": "PhD at UChicago, RL for language models, especially Computer Use Agents",
+          "extended_bio": "Yinjie's web",
+          "email": null,
+          "website": "https://yinjjiew.github.io/",
+          "pinned_repositories": [
+            {
+              "name": "Gen-Verse/OpenClaw-RL",
+              "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": "4.8k",
+              "language": "Python"
+            },
+            {
+              "name": "Gen-Verse/dLLM-RL",
+              "url": "https://github.com/Gen-Verse/dLLM-RL",
+              "description": "[ICLR 2026] Official code for TraceRL: Revolutionizing post-training for Diffusion LLMs, powering the SOTA TraDo series.",
+              "stars": "489",
+              "language": "Python"
+            },
+            {
+              "name": "Gen-Verse/Open-AgentRL",
+              "url": "https://github.com/Gen-Verse/Open-AgentRL",
+              "description": "RLAnything & DemyAgent: General and scalable agentic RL algorithms across terminal, GUI, SWE, and tool-call settings",
+              "stars": "450",
+              "language": "Python"
+            },
+            {
+              "name": "Gen-Verse/CURE",
+              "url": "https://github.com/Gen-Verse/CURE",
+              "description": "[NeurIPS 2025 Spotlight] Co-Evolving LLM Coder and Unit Tester via Reinforcement Learning",
+              "stars": "165",
+              "language": "Python"
+            }
+          ]
+        },
+        {
+          "name": "Ling Yang",
+          "username": "YangLing0818",
+          "profile_url": "https://github.com/YangLing0818",
+          "commits_to_repo": 5,
+          "bio": "Postdoc at Princeton University",
+          "extended_bio": "## Hi there \ud83d\udc4b\n\n \n\n[Homepage](https://yangling0818.github.io/) | [Google Scholar](https://scholar.google.com.hk/citations?user=sIKujqAAAAAJ&hl=en) | [Group Page](https://github.com/Gen-Verse) | [Huggingface](https://huggingface.co/Gen-Verse) | [E-Mail](yangling0818@163.com)\n\nI am a Postdoc Fellow at Princeton University. **<font color=red>We are looking for self-motivated students and insightful collaborators to for research in LLM/MLLM Post-Training, Diffusion LLMs, World Modeling, Agent Training</font>**. Please feel free to reach out for potential collaborations or discussions via [Email](mailto:yangling0818@163.com) or [WeChat](./image-1.png). When contacting, please include a brief self-introduction or attach your CV for meaningful exchange.",
+          "email": "yangling0818@163.com",
+          "website": "https://yangling0818.github.io/",
+          "pinned_repositories": [
+            {
+              "name": "Gen-Verse/OpenClaw-RL",
+              "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": "4.8k",
+              "language": "Python"
+            },
+            {
+              "name": "RPG-DiffusionMaster",
+              "url": "https://github.com/YangLing0818/RPG-DiffusionMaster",
+              "description": "[ICML 2024] Mastering Text-to-Image Diffusion: Recaptioning, Planning, and Generating with Multimodal LLMs (RPG)",
+              "stars": "1.8k",
+              "language": "Jupyter Notebook"
+            },
+            {
+              "name": "Gen-Verse/MMaDA",
+              "url": "https://github.com/Gen-Verse/MMaDA",
+              "description": "MMaDA - Open-Sourced Multimodal Large Diffusion Language Models (dLLMs with block diffusion, mixed-CoT, unified RL)",
+              "stars": "1.6k",
+              "language": "Python"
+            },
+            {
+              "name": "Gen-Verse/LatentMAS",
+              "url": "https://github.com/Gen-Verse/LatentMAS",
+              "description": "Latent Collaboration in Multi-Agent Systems",
+              "stars": "868",
+              "language": "Python"
+            }
+          ]
+        },
+        {
+          "name": "-.-",
+          "username": "yzoaim",
+          "profile_url": "https://github.com/yzoaim",
+          "commits_to_repo": 4,
+          "bio": "",
+          "extended_bio": null,
+          "email": null,
+          "website": null,
+          "pinned_repositories": [
+            {
+              "name": "LLaMA-Factory",
+              "url": "https://github.com/yzoaim/LLaMA-Factory",
+              "description": "Unify Efficient Fine-Tuning of 100+ LLMs",
+              "stars": null,
+              "language": "Python"
+            },
+            {
+              "name": "BUAA_Database",
+              "url": "https://github.com/yzoaim/BUAA_Database",
+              "description": "",
+              "stars": null,
+              "language": "Vue"
+            },
+            {
+              "name": "easy-dataset",
+              "url": "https://github.com/yzoaim/easy-dataset",
+              "description": "A powerful tool for creating fine-tuning datasets for LLM",
+              "stars": null,
+              "language": "JavaScript"
+            },
+            {
+              "name": "NativeRes-LLaVA",
+              "url": "https://github.com/yzoaim/NativeRes-LLaVA",
+              "description": "Official code repo for our work \"Native Visual Understanding: Resolving Resolution Dilemmas in Vision-Language Models\"",
+              "stars": null,
+              "language": "Python"
+            }
+          ]
+        },
+        {
+          "name": "Xuyang Chen",
+          "username": "xuyangc03",
+          "profile_url": "https://github.com/xuyangc03",
+          "commits_to_repo": 2,
+          "bio": "PhD at UPenn",
+          "extended_bio": null,
+          "email": null,
+          "website": null,
+          "pinned_repositories": [
+            {
+              "name": "OpenClaw-RL",
+              "url": "https://github.com/xuyangc03/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": null,
+              "language": "Python"
+            }
+          ]
+        },
+        {
+          "name": "Jingyang Zhang",
+          "username": "zjysteven",
+          "profile_url": "https://github.com/zjysteven",
+          "commits_to_repo": 1,
+          "bio": "Research Scientist @ Virtue AI | Ph.D. @ Duke",
+          "extended_bio": "### Hi there \ud83d\udc4b\n\n\n\nI'm Jingyang (Steven) Zhang, a Research Scientist at [Virtue AI](https://www.virtueai.com/). Previously I got my Ph.D. from Duke University in 2024 (supervised by Prof. Yiran Chen and Prof. Hai (Helen) Li) and Bachelor degree from Tsinghua University in 2019.\n\nSee my [personal webpage](https://zjysteven.github.io) to know more about me and my Ph.D. research.\n\n[![Jingyang's GitHub stats](https://github-readme-stats-fast.vercel.app/api?username=zjysteven)](https://github.com/zjysteven/github-readme-stats-fast)",
+          "email": null,
+          "website": "https://zjysteven.github.io/",
+          "pinned_repositories": [
+            {
+              "name": "Gen-Verse/OpenClaw-RL",
+              "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": "4.8k",
+              "language": "Python"
+            },
+            {
+              "name": "Jingkang50/OpenOOD",
+              "url": "https://github.com/Jingkang50/OpenOOD",
+              "description": "Benchmarking Generalized Out-of-Distribution Detection",
+              "stars": "1k",
+              "language": "Python"
+            },
+            {
+              "name": "lmms-finetune",
+              "url": "https://github.com/zjysteven/lmms-finetune",
+              "description": "A minimal codebase for finetuning large multimodal models, supporting llava-1.5/1.6, llava-interleave, llava-next-video, llava-onevision, llama-3.2-vision, qwen-vl, qwen2-vl, phi3-v etc.",
+              "stars": "371",
+              "language": "Python"
+            },
+            {
+              "name": "VLM-Visualizer",
+              "url": "https://github.com/zjysteven/VLM-Visualizer",
+              "description": "Visualizing the attention of vision-language models",
+              "stars": "293",
+              "language": "Jupyter Notebook"
+            }
+          ]
+        },
+        {
+          "name": "JXL",
+          "username": "Jinxiaolong1129",
+          "profile_url": "https://github.com/Jinxiaolong1129",
+          "commits_to_repo": 1,
+          "bio": "Build with love.",
+          "extended_bio": null,
+          "email": null,
+          "website": null,
+          "pinned_repositories": [
+            {
+              "name": "Gen-Verse/OpenClaw-RL",
+              "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": "4.8k",
+              "language": "Python"
+            },
+            {
+              "name": "NUS-HPC-AI-Lab/VideoSys",
+              "url": "https://github.com/NUS-HPC-AI-Lab/VideoSys",
+              "description": "VideoSys: An easy and efficient system for video generation",
+              "stars": "2k",
+              "language": "Python"
+            },
+            {
+              "name": "OSU-NLP-Group/SkillWeaver",
+              "url": "https://github.com/OSU-NLP-Group/SkillWeaver",
+              "description": "SkillWeaver is a framework to enable web agent self-improvement through environment exploration and skill synthesis.",
+              "stars": "117",
+              "language": "Python"
+            },
+            {
+              "name": "Cond-PDiff",
+              "url": "https://github.com/Jinxiaolong1129/Cond-PDiff",
+              "description": "",
+              "stars": "5",
+              "language": "Python"
+            }
+          ]
+        },
+        {
+          "name": "Junbo Niu",
+          "username": "Niujunbo2002",
+          "profile_url": "https://github.com/Niujunbo2002",
+          "commits_to_repo": 1,
+          "bio": "",
+          "extended_bio": "- \ud83d\udc4b Hi, I\u2019m Junbo Niu\uff08\u725b\u4fca\u535a\uff09\n- A Ph.D Candidate All in LLM.",
+          "email": null,
+          "website": "https://niujunbo2002.github.io/nnnn.github.io/",
+          "pinned_repositories": [
+            {
+              "name": "JoeLeelyf/OVO-Bench",
+              "url": "https://github.com/JoeLeelyf/OVO-Bench",
+              "description": "[CVPR 2025] OVO-Bench: How Far is Your Video-LLMs from Real-World Online Video Understanding?",
+              "stars": "131",
+              "language": "Python"
+            },
+            {
+              "name": "Gen-Verse/OpenClaw-RL",
+              "url": "https://github.com/Gen-Verse/OpenClaw-RL",
+              "description": "OpenClaw-RL: Train any agent simply by talking",
+              "stars": "4.8k",
+              "language": "Python"
+            },
+            {
+              "name": "opendatalab/MinerU-Diffusion",
+              "url": "https://github.com/opendatalab/MinerU-Diffusion",
+              "description": "A diffusion-based framework for document OCR that replaces autoregressive decoding with block-level parallel diffusion decoding.",
+              "stars": "488",
+              "language": "Python"
+            },
+            {
+              "name": "opendatalab/MinerU",
+              "url": "https://github.com/opendatalab/MinerU",
+              "description": "Transforms complex documents like PDFs into LLM-ready markdown/JSON for your Agentic workflows.",
+              "stars": "59.4k",
+              "language": "Python"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "agentscope-ai/HiClaw",
+      "description": "Anopen-source Collaborative Multi-Agent OS for transparent, human-in-the-loop task coordination via Matrix rooms.",
+      "url": "https://github.com/agentscope-ai/HiClaw",
+      "stars": 4054,
+      "language": "Shell",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "1186258278/OpenClawChineseTranslation",
+      "description": "\ud83e\udd9e OpenClaw (Clawdbot/Moltbot) \u6c49\u5316\u7248 - \u5f00\u6e90\u4e2a\u4eba AI \u52a9\u624b\u4e2d\u6587\u7248 | Claude/ChatGPT LLM \u63a5\u5165 | WhatsApp/Telegram/Discord \u591a\u5e73\u53f0 | \u6bcf\u5c0f\u65f6\u81ea\u52a8\u540c\u6b65 | CLI + Dashboard \u5168\u4e2d\u6587\u2026",
+      "url": "https://github.com/1186258278/OpenClawChineseTranslation",
+      "stars": 3691,
+      "language": "JavaScript",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "miaoxworld/OpenClawInstaller",
+      "description": "ClawdBot \u4e00\u952e\u90e8\u7f72\u5de5\u5177",
+      "url": "https://github.com/miaoxworld/OpenClawInstaller",
+      "stars": 3340,
+      "language": "Shell",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh",
+      "description": "\u4ece\u96f6\u5230\u4f01\u4e1a\u5b9e\u6218\uff1aClaude Code \u5b98\u65b9\u7f16\u7a0b\u795e\u5668 + OpenClaw 224K Stars \u5f00\u6e90AI\u52a9\u624b | \u53cc\u9876\u6d41\u4e2d\u6587\u6559\u7a0b | 21\u7bc7\u6559\u7a0b 130000+\u5b57",
+      "url": "https://github.com/KimYx0207/Claude-Code-x-OpenClaw-Guide-Zh",
+      "stars": 3190,
+      "language": null,
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "FreedomIntelligence/OpenClaw-Medical-Skills",
+      "description": "The largestopen-source medical AI skills library for OpenClaw\ud83e\udd9e.",
+      "url": "https://github.com/FreedomIntelligence/OpenClaw-Medical-Skills",
+      "stars": 1999,
+      "language": "Python",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "clawsoftware/clawPDF",
+      "description": "OpenSource Virtual (Network) Printer for Windows that allows you to create PDFs, OCR text, and print images, with advanced features usua\u2026",
+      "url": "https://github.com/clawsoftware/clawPDF",
+      "stars": 1886,
+      "language": "C#",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "xmanrui/OpenClaw-bot-review",
+      "description": "A lightweight web dashboard for viewing all your OpenClaw Bots/Agents/Models/Sessions status at a glance.",
+      "url": "https://github.com/xmanrui/OpenClaw-bot-review",
+      "stars": 1785,
+      "language": "TypeScript",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "openakita/openakita",
+      "description": "Anopen-source AI assistant framework with skills and agent architecture",
+      "url": "https://github.com/openakita/openakita",
+      "stars": 1615,
+      "language": "Python",
+      "forks": null,
+      "followers": null
+    },
+    {
+      "name": "iamlukethedev/Claw3D",
+      "description": "Claw3D is anopensource 3D engine built on OpenClaw for creating games, simulations, and high-performance 3D applications.",
+      "url": "https://github.com/iamlukethedev/Claw3D",
+      "stars": 1269,
+      "language": "TypeScript",
+      "forks": null,
+      "followers": null
+    }
+  ]
+}
