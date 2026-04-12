@@ -25,11 +25,11 @@ MD_OUTPUT_PATH = "top_50_report.md"
 
 # Fallback role context when no search_config.json is present (original behavior)
 DEFAULT_ROLE_CONTEXT = {
-    "title": "RL / Computer Use Agent Engineer",
-    "key_skills": ["reinforcement learning", "LLM agents", "Python", "computer use"],
+    "title": "Software Engineer",
+    "key_skills": ["open-source contributions", "software development", "relevant experience"],
     "description": (
-        "Engineer with experience in RL frameworks, LLM/agent work, and Python, "
-        "ideally with contributions to OpenClaw or similar open-source projects."
+        "Engineer with relevant experience and open-source contributions "
+        "in the target domain."
     ),
 }
 
@@ -277,11 +277,13 @@ def generate_markdown_report(
     lines.append("")
     lines.append("Each contributor is scored on two dimensions:")
     lines.append("")
+    key_skills = rc.get("key_skills", [])
+    skills_str = ", ".join(key_skills) if key_skills else "relevant technical skills"
     lines.append("| Dimension | Weight | Description |")
     lines.append("|-----------|--------|-------------|")
     lines.append(
-        "| Relevant Skillset | 50% | RL experience, LLM/agent work, Python proficiency, "
-        "contributions to OpenClaw or similar projects |"
+        f"| Relevant Skillset | 50% | Experience with {skills_str}, "
+        f"contributions to relevant open-source projects |"
     )
     lines.append(
         "| Hireability | 30% | Likelihood of accepting a $250k-$400k offer, considering "

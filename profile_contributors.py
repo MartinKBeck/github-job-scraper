@@ -24,11 +24,11 @@ MD_OUTPUT_PATH = "contributor_profiles_report.md"
 
 # Fallback role context when no search_config.json is present (original behavior)
 DEFAULT_ROLE_CONTEXT = {
-    "title": "RL / Computer Use Agent Engineer",
-    "key_skills": ["reinforcement learning", "LLM agents", "Python", "computer use"],
+    "title": "Software Engineer",
+    "key_skills": ["open-source contributions", "software development", "relevant experience"],
     "description": (
-        "Engineer with experience in RL frameworks, LLM/agent work, and Python, "
-        "ideally with contributions to OpenClaw or similar open-source projects."
+        "Engineer with relevant experience and open-source contributions "
+        "in the target domain."
     ),
 }
 
