@@ -4,3 +4,7 @@ __pycache__/
 output/
 venv/
 .venv/
+output.txt
+enriched_output.txt
+contributor_profiles.json
+contributor_profiles_report.md
