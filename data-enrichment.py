@@ -306,22 +306,23 @@ def enrich_from_linkedin(contributor: dict) -> dict:
       3. Google site-search fallback via OxyLabs
     Adds linkedin_profile_url and linkedin_profile_data to the contributor dict.
     """
-    name = (contributor.get("name") or "").strip()
-    parts = name.split()
-    if len(parts) < 2:
-        print("      Skipping LinkedIn enrichment — no full name available")
-        return contributor
-
-    first_name = parts[0]
-    last_name = parts[-1]
-
-    # --- Strategy 1: Email-based reverse lookup ---
+    # --- Strategy 1: Email-based reverse lookup (no name required) ---
     email = contributor.get("email")
     if email and ENRICHLAYER_API_KEY:
         data = _enrichlayer_email_lookup(email)
         if data:
             print("      Matched via email lookup")
             return _apply_enrichlayer_data(contributor, data)
+
+    # Strategies 2 & 3 require at least a two-part name
+    name = (contributor.get("name") or "").strip()
+    parts = name.split()
+    if len(parts) < 2:
+        print("      Skipping remaining strategies — no full name available")
+        return contributor
+
+    first_name = parts[0]
+    last_name = parts[-1]
 
     # --- Extract professional info using Claude ---
     pro_info = extract_professional_info(contributor)
