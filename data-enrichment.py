@@ -325,7 +325,7 @@ def enrich_from_linkedin(contributor: dict) -> dict:
     pro_info = extract_professional_info(contributor)
 
     # --- Strategy 2: Enrich Layer name + company lookup ---
-    if ENRICHLAYER_API_KEY and (pro_info.get("company_domain") or pro_info.get("company")):
+    if ENRICHLAYER_API_KEY and pro_info.get("company_domain"):
         data = _enrichlayer_resolve(first_name, last_name, pro_info)
         if data:
             print("      Matched via Enrich Layer name+company lookup")
