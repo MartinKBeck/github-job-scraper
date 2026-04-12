@@ -14,7 +14,7 @@ import json
 import os
 import re
 from datetime import date
-from urllib.parse import quote_plus
+from urllib.parse import quote_plus, unquote
 import anthropic
 import requests
 from bs4 import BeautifulSoup
@@ -148,18 +148,64 @@ def _format_tenure(starts_at: dict) -> str:
     return f"{rem} mo{'s' if rem > 1 else ''}"
 
 
+def _normalize_linkedin_url(url: str, profile: dict) -> str:
+    """
+    Normalize a LinkedIn profile URL so the slug uses the romanized
+    (ASCII) form of the person's name rather than non-ASCII characters.
+
+    Enrich Layer may return URLs like
+      https://www.linkedin.com/in/\u7075-\u6768-724b1936a
+    but LinkedIn's canonical slug is
+      https://www.linkedin.com/in/ling-yang-724b1936a
+
+    When the profile payload contains ``first_name`` / ``last_name`` in
+    ASCII and the URL slug has non-ASCII characters, we rebuild the slug
+    from the English name + the alphanumeric suffix.
+    """
+    if "/in/" not in url:
+        return url
+
+    slug = unquote(url.split("/in/")[-1]).rstrip("/")
+
+    # Only fix if the slug actually contains non-ASCII characters
+    if all(ord(c) < 128 for c in slug):
+        return url.rstrip("/") + "/"
+
+    first = (profile.get("first_name") or "").strip().lower()
+    last = (profile.get("last_name") or "").strip().lower()
+    if not first or not last:
+        return url
+
+    # Extract the trailing alphanumeric ID (e.g. "724b1936a")
+    parts = slug.split("-")
+    suffix_parts = []
+    for p in reversed(parts):
+        if re.match(r"^[a-z0-9]+$", p):
+            suffix_parts.insert(0, p)
+        else:
+            break
+    suffix = "-".join(suffix_parts)
+
+    new_slug = f"{first}-{last}-{suffix}" if suffix else f"{first}-{last}"
+    return f"https://www.linkedin.com/in/{new_slug}/"
+
+
 def _apply_enrichlayer_data(contributor: dict, data: dict) -> dict:
     """Apply Enrich Layer response data to the contributor dict."""
     linkedin_url = data.get("linkedin_url") or data.get("url")
+    # Profile data may be nested under "profile" key when enrich_profile=enrich
+    profile = data.get("profile") or data
+
     if linkedin_url:
         # Normalize relative URLs from Enrich Layer
         if linkedin_url.startswith("/"):
             linkedin_url = f"https://www.linkedin.com{linkedin_url}"
         elif not linkedin_url.startswith("http"):
             linkedin_url = f"https://www.linkedin.com/in/{linkedin_url}"
+        # Romanize non-ASCII slugs using profile first/last name
+        linkedin_url = _normalize_linkedin_url(linkedin_url, profile)
         contributor["linkedin_profile_url"] = linkedin_url
 
-    # Profile data may be nested under "profile" key when enrich_profile=enrich
     profile = data.get("profile") or data
     experiences = profile.get("experiences") or []
     if experiences:
