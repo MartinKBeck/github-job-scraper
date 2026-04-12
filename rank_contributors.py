@@ -22,9 +22,16 @@ ENRICHED_PATH = "enriched_output.txt"
 JSON_OUTPUT_PATH = "top_50_contributors.json"
 MD_OUTPUT_PATH = "top_50_report.md"
 
-SKILLSET_WEIGHT = 0.6
-HIREABILITY_WEIGHT = 0.4
+SKILLSET_WEIGHT = 0.5
+HIREABILITY_WEIGHT = 0.3
+LOCATION_WEIGHT = 0.2
 TOP_N = 50
+
+LOCATION_SCORES = {
+    "san_francisco": 5,
+    "within_us": 3,
+    "outside_us": 1,
+}
 
 
 def load_enriched_data(path: str) -> dict:
@@ -65,6 +72,8 @@ def build_reassessment_context(profile: dict, enriched: dict | None) -> str:
             parts.append(f"Public Email: {enriched['email']}")
         if enriched.get("website"):
             parts.append(f"Website: {enriched['website']}")
+        if enriched.get("location"):
+            parts.append(f"Location: {enriched['location']}")
         if enriched.get("linkedin_profile_url"):
             parts.append(f"LinkedIn: {enriched['linkedin_profile_url']}")
         li_data = enriched.get("linkedin_profile_data")
@@ -103,8 +112,16 @@ def reassess_contributor(client: anthropic.Anthropic, profile: dict, enriched: d
         "1. \"hireability\": object with:\n"
         "   - \"score\" (integer 1-5): Re-assessed hireability considering the $250k-$400k offer\n"
         "   - \"justification\": Brief explanation considering salary context\n"
-        "2. \"recruitment_recommendation\": 1-2 sentences on the best approach to recruit this person\n\n"
-        "Scoring guide:\n"
+        "2. \"location\": object with:\n"
+        "   - \"category\": One of \"san_francisco\", \"within_us\", or \"outside_us\"\n"
+        "     Determine the candidate's likely location from all available signals (bio, "
+        "company HQ, LinkedIn, email domain, university, timezone clues, etc.).\n"
+        "     - \"san_francisco\" = located in San Francisco or the immediate SF Bay Area\n"
+        "     - \"within_us\" = located in the United States but not in the SF Bay Area\n"
+        "     - \"outside_us\" = located outside the United States, or location completely unknown\n"
+        "   - \"justification\": Brief explanation of how you determined the location\n"
+        "3. \"recruitment_recommendation\": 1-2 sentences on the best approach to recruit this person\n\n"
+        "Scoring guide for hireability:\n"
         "  1 = Very unlikely to recruit, 2 = Low chance, 3 = Moderate chance, "
         "4 = High chance, 5 = Very likely to recruit\n\n"
         "Return ONLY valid JSON. No markdown fences, no extra text.\n\n"
@@ -128,15 +145,28 @@ def reassess_contributor(client: anthropic.Anthropic, profile: dict, enriched: d
         result = {
             "hireability": {"score": profile.get("hireability", {}).get("score", 0),
                             "justification": "Re-assessment failed; using original score."},
+            "location": {"category": "outside_us",
+                         "justification": "Re-assessment failed; defaulting to outside_us."},
             "recruitment_recommendation": "Unable to generate recommendation.",
         }
+
+    # Normalise location if Claude returned an unexpected category
+    loc = result.get("location") or {}
+    if loc.get("category") not in LOCATION_SCORES:
+        loc["category"] = "outside_us"
+        result["location"] = loc
 
     return result
 
 
-def compute_composite_score(skillset_score: int, hireability_score: int) -> float:
+def compute_composite_score(skillset_score: int, hireability_score: int, location_score: int) -> float:
     """Compute weighted composite score."""
-    return round(SKILLSET_WEIGHT * skillset_score + HIREABILITY_WEIGHT * hireability_score, 2)
+    return round(
+        SKILLSET_WEIGHT * skillset_score
+        + HIREABILITY_WEIGHT * hireability_score
+        + LOCATION_WEIGHT * location_score,
+        2,
+    )
 
 
 def generate_ranked_json(ranked_candidates: list, total: int) -> dict:
@@ -148,6 +178,12 @@ def generate_ranked_json(ranked_candidates: list, total: int) -> dict:
             "weights": {
                 "relevant_skillset": SKILLSET_WEIGHT,
                 "hireability": HIREABILITY_WEIGHT,
+                "location": LOCATION_WEIGHT,
+            },
+            "location_scoring": {
+                "san_francisco": LOCATION_SCORES["san_francisco"],
+                "within_us": LOCATION_SCORES["within_us"],
+                "outside_us": LOCATION_SCORES["outside_us"],
             },
         },
         "total_candidates": total,
@@ -170,9 +206,10 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
     lines.append("")
     lines.append(
         f"This report ranks **{total}** contributors from OpenClaw-related repositories "
-        f"based on their technical skillset relevance and hireability for positions offering "
-        f"**$250,000 - $400,000** total compensation. Contributors were evaluated using a "
-        f"composite scoring algorithm that weights relevant skillset (60%) and hireability (40%)."
+        f"based on their technical skillset relevance, hireability, and location for positions "
+        f"offering **$250,000 - $400,000** total compensation. Contributors were evaluated using "
+        f"a composite scoring algorithm that weights relevant skillset (50%), hireability (30%), "
+        f"and location (20%)."
     )
     lines.append("")
     if ranked_candidates:
@@ -191,15 +228,19 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
     lines.append("| Dimension | Weight | Description |")
     lines.append("|-----------|--------|-------------|")
     lines.append(
-        "| Relevant Skillset | 60% | RL experience, LLM/agent work, Python proficiency, "
+        "| Relevant Skillset | 50% | RL experience, LLM/agent work, Python proficiency, "
         "contributions to OpenClaw or similar projects |"
     )
     lines.append(
-        "| Hireability | 40% | Likelihood of accepting a $250k-$400k offer, considering "
+        "| Hireability | 30% | Likelihood of accepting a $250k-$400k offer, considering "
         "current role, career stage, accessibility, and financial incentive |"
     )
+    lines.append(
+        "| Location | 20% | Candidate proximity: San Francisco (5), "
+        "Within US (3), Outside US (1) |"
+    )
     lines.append("")
-    lines.append("**Composite Score** = 0.6 x Skillset + 0.4 x Hireability (max 5.0)")
+    lines.append("**Composite Score** = 0.5 x Skillset + 0.3 x Hireability + 0.2 x Location (max 5.0)")
     lines.append("")
     lines.append(
         "Hireability was re-assessed by Claude with specific context about the $250k-$400k "
@@ -211,8 +252,8 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
     # Summary Table
     lines.append("## Summary Table")
     lines.append("")
-    lines.append("| Rank | Name | Username | Skillset | Hireability | Composite | Recommendation |")
-    lines.append("|-----:|------|----------|:--------:|:-----------:|:---------:|----------------|")
+    lines.append("| Rank | Name | Username | Skillset | Hireability | Location | Composite | Recommendation |")
+    lines.append("|-----:|------|----------|:--------:|:-----------:|:--------:|:---------:|----------------|")
 
     for c in ranked_candidates:
         rec = c.get("recruitment_recommendation", "N/A")
@@ -221,10 +262,15 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
             rec_short = rec[:77] + "..."
         else:
             rec_short = rec
+        loc = c.get("location", {})
+        loc_cat = loc.get("category", "outside_us")
+        loc_label = {"san_francisco": "SF", "within_us": "US", "outside_us": "Intl"}.get(loc_cat, "?")
+        loc_score = LOCATION_SCORES.get(loc_cat, 1)
         lines.append(
             f"| {c['rank']} | {c['name']} | @{c['username']} "
             f"| {c.get('relevant_skillset', {}).get('score', '?')}/5 "
             f"| {c.get('hireability', {}).get('score', '?')}/5 "
+            f"| {loc_label} ({loc_score}/5) "
             f"| **{c['composite_score']}** "
             f"| {rec_short} |"
         )
@@ -258,6 +304,14 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
         lines.append(f"> {hire.get('justification', 'N/A')}")
         lines.append("")
 
+        loc = c.get("location", {})
+        loc_cat = loc.get("category", "outside_us")
+        loc_label = {"san_francisco": "San Francisco", "within_us": "Within US", "outside_us": "Outside US"}.get(loc_cat, "Unknown")
+        loc_score = LOCATION_SCORES.get(loc_cat, 1)
+        lines.append(f"**Location:** {loc_label} ({loc_score}/5)")
+        lines.append(f"> {loc.get('justification', 'N/A')}")
+        lines.append("")
+
         lines.append(f"**Recruitment Recommendation:** {c.get('recruitment_recommendation', 'N/A')}")
         lines.append("")
         lines.append("---")
@@ -269,11 +323,16 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
         lines.append("## Quick Reference (Remaining Candidates)")
         lines.append("")
         for c in remaining:
+            loc = c.get("location", {})
+            loc_cat = loc.get("category", "outside_us")
+            loc_label = {"san_francisco": "SF", "within_us": "US", "outside_us": "Intl"}.get(loc_cat, "?")
+            loc_score = LOCATION_SCORES.get(loc_cat, 1)
             lines.append(
                 f"- **#{c['rank']} {c['name']}** (@{c['username']}) - "
                 f"Composite: {c['composite_score']} | "
                 f"Skillset: {c.get('relevant_skillset', {}).get('score', '?')}/5 | "
                 f"Hireability: {c.get('hireability', {}).get('score', '?')}/5 | "
+                f"Location: {loc_label} ({loc_score}/5) | "
                 f"{c.get('recruitment_recommendation', 'N/A')}"
             )
         lines.append("")
@@ -308,11 +367,14 @@ def main():
         enriched = enriched_lookup.get(username)
         reassessment = reassess_contributor(client, profile, enriched)
 
-        # Use original skillset score, updated hireability
+        # Use original skillset score, updated hireability, and new location
         skillset_score = (profile.get("relevant_skillset") or {}).get("score") or 0
         new_hireability = reassessment.get("hireability") or {}
         hireability_score = new_hireability.get("score") or 0
-        composite = compute_composite_score(skillset_score, hireability_score)
+        new_location = reassessment.get("location") or {"category": "outside_us", "justification": "No location data."}
+        location_category = new_location.get("category", "outside_us")
+        location_score = LOCATION_SCORES.get(location_category, 1)
+        composite = compute_composite_score(skillset_score, hireability_score, location_score)
 
         candidate = {
             "rank": 0,  # Assigned after sorting
@@ -322,15 +384,18 @@ def main():
             "profile_summary": profile.get("profile_summary", ""),
             "relevant_skillset": profile.get("relevant_skillset", {}),
             "hireability": new_hireability,
+            "location": new_location,
             "composite_score": composite,
             "recruitment_recommendation": reassessment.get("recruitment_recommendation", ""),
         }
         ranked.append(candidate)
 
+        loc_label = {"san_francisco": "SF", "within_us": "US", "outside_us": "Intl"}.get(location_category, "?")
         print(
             f"    Skillset: {skillset_score}/5, "
             f"Hireability: {hireability_score}/5 "
             f"(was {profile.get('hireability', {}).get('score', '?')}), "
+            f"Location: {loc_label} ({location_score}/5), "
             f"Composite: {composite}"
         )
 
