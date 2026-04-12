@@ -202,7 +202,7 @@ def enrich_repository(repo: dict) -> dict:
 
     counter = contrib_soup.select_one("span.Counter")
     repo["contributor_count"] = (
-        int(counter["title"]) if counter and counter.get("title") else None
+        int(counter["title"].replace(",", "")) if counter and counter.get("title") else None
     )
 
     NON_HUMAN = {
