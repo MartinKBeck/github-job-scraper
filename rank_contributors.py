@@ -223,8 +223,8 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
             rec_short = rec
         lines.append(
             f"| {c['rank']} | {c['name']} | @{c['username']} "
-            f"| {c['relevant_skillset']['score']}/5 "
-            f"| {c['hireability']['score']}/5 "
+            f"| {c.get('relevant_skillset', {}).get('score', '?')}/5 "
+            f"| {c.get('hireability', {}).get('score', '?')}/5 "
             f"| **{c['composite_score']}** "
             f"| {rec_short} |"
         )
@@ -272,8 +272,8 @@ def generate_markdown_report(ranked_candidates: list, total: int) -> str:
             lines.append(
                 f"- **#{c['rank']} {c['name']}** (@{c['username']}) - "
                 f"Composite: {c['composite_score']} | "
-                f"Skillset: {c['relevant_skillset']['score']}/5 | "
-                f"Hireability: {c['hireability']['score']}/5 | "
+                f"Skillset: {c.get('relevant_skillset', {}).get('score', '?')}/5 | "
+                f"Hireability: {c.get('hireability', {}).get('score', '?')}/5 | "
                 f"{c.get('recruitment_recommendation', 'N/A')}"
             )
         lines.append("")
