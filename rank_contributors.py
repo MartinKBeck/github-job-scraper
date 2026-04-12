@@ -50,8 +50,8 @@ def load_role_context() -> dict:
 
     return DEFAULT_ROLE_CONTEXT
 
-SKILLSET_WEIGHT = 0.5
-HIREABILITY_WEIGHT = 0.3
+SKILLSET_WEIGHT = 0.45
+HIREABILITY_WEIGHT = 0.35
 LOCATION_WEIGHT = 0.2
 TOP_N = 50
 
@@ -260,7 +260,7 @@ def generate_markdown_report(
         f"based on their technical skillset relevance to the **{role_title}** role, "
         f"hireability, and location for positions offering **$250,000 - $400,000** "
         f"total compensation. Contributors were evaluated using a composite scoring "
-        f"algorithm that weights relevant skillset (50%), hireability (30%), and "
+        f"algorithm that weights relevant skillset (45%), hireability (35%), and "
         f"location (20%)."
     )
     lines.append("")
@@ -282,11 +282,11 @@ def generate_markdown_report(
     lines.append("| Dimension | Weight | Description |")
     lines.append("|-----------|--------|-------------|")
     lines.append(
-        f"| Relevant Skillset | 50% | Experience with {skills_str}, "
+        f"| Relevant Skillset | 45% | Experience with {skills_str}, "
         f"contributions to relevant open-source projects |"
     )
     lines.append(
-        "| Hireability | 30% | Likelihood of accepting a $250k-$400k offer, considering "
+        "| Hireability | 35% | Likelihood of accepting a $250k-$400k offer, considering "
         "current role, career stage, accessibility, and financial incentive |"
     )
     lines.append(
@@ -294,7 +294,7 @@ def generate_markdown_report(
         "Within US (3), Outside US (1) |"
     )
     lines.append("")
-    lines.append("**Composite Score** = 0.5 x Skillset + 0.3 x Hireability + 0.2 x Location (max 5.0)")
+    lines.append("**Composite Score** = 0.45 x Skillset + 0.35 x Hireability + 0.2 x Location (max 5.0)")
     lines.append("")
     lines.append(
         "Hireability was re-assessed by Claude with specific context about the $250k-$400k "
