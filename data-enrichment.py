@@ -84,6 +84,8 @@ def extract_professional_info(contributor: dict) -> dict:
         return {}
 
     context = "\n".join(context_parts)
+    # Sanitize surrogate characters that can appear in emoji-rich GitHub bios
+    context = context.encode("utf-8", errors="replace").decode("utf-8")
 
     client = anthropic.Anthropic(api_key=ANTHROPIC_API_KEY)
     message = client.messages.create(
@@ -152,7 +154,7 @@ def _apply_enrichlayer_data(contributor: dict, data: dict) -> dict:
     if linkedin_url:
         # Normalize relative URLs from Enrich Layer
         if linkedin_url.startswith("/"):
-            linkedin_url = f"https://www.linkedin.com/in{linkedin_url}"
+            linkedin_url = f"https://www.linkedin.com{linkedin_url}"
         elif not linkedin_url.startswith("http"):
             linkedin_url = f"https://www.linkedin.com/in/{linkedin_url}"
         contributor["linkedin_profile_url"] = linkedin_url
