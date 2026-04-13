@@ -114,7 +114,7 @@ python profile_contributors.py
 Final ranking step that uses Claude to re-assess each contributor with salary context ($250k-$400k):
 - **Salary-adjusted hireability**: Accounts for academic vs. industry compensation
 - **Location scoring**: San Francisco (5), Within US (3), Outside US (1)
-- **Composite score**: 50% skillset + 30% hireability + 20% location
+- **Composite score**: 45% skillset + 35% hireability + 20% location
 
 Produces a polished markdown report with an executive summary, ranking table, and detailed profiles for the top 10 candidates.
 
