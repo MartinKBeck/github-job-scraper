@@ -331,14 +331,14 @@ def generate_markdown_report(
 
     lines.append("")
 
-    # Detailed profiles for top 10
-    top_10 = ranked_candidates[:10]
+    # Detailed profiles for top 20
+    top_20 = ranked_candidates[:20]
     lines.append("---")
     lines.append("")
-    lines.append("## Detailed Profiles (Top 10)")
+    lines.append("## Detailed Profiles (Top 20)")
     lines.append("")
 
-    for c in top_10:
+    for c in top_20:
         lines.append(f"### #{c['rank']}. {c['name']} (@{c['username']})")
         lines.append("")
         lines.append(f"**Repository:** {c['repository']}")

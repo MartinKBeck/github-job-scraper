@@ -116,7 +116,7 @@ Final ranking step that uses Claude to re-assess each contributor with salary co
 - **Location scoring**: San Francisco (5), Within US (3), Outside US (1)
 - **Composite score**: 45% skillset + 35% hireability + 20% location
 
-Produces a polished markdown report with an executive summary, ranking table, and detailed profiles for the top 10 candidates.
+Produces a polished markdown report with an executive summary, ranking table, and detailed profiles for the top 20 candidates.
 
 ```bash
 python rank_contributors.py
