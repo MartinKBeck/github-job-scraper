@@ -25,11 +25,11 @@ MD_OUTPUT_PATH = "top_50_report.md"
 
 # Fallback role context when no search_config.json is present (original behavior)
 DEFAULT_ROLE_CONTEXT = {
-    "title": "RL / Computer Use Agent Engineer",
-    "key_skills": ["reinforcement learning", "LLM agents", "Python", "computer use"],
+    "title": "Software Engineer",
+    "key_skills": ["open-source contributions", "software development", "relevant experience"],
     "description": (
-        "Engineer with experience in RL frameworks, LLM/agent work, and Python, "
-        "ideally with contributions to OpenClaw or similar open-source projects."
+        "Engineer with relevant experience and open-source contributions "
+        "in the target domain."
     ),
 }
 
@@ -50,8 +50,8 @@ def load_role_context() -> dict:
 
     return DEFAULT_ROLE_CONTEXT
 
-SKILLSET_WEIGHT = 0.5
-HIREABILITY_WEIGHT = 0.3
+SKILLSET_WEIGHT = 0.45
+HIREABILITY_WEIGHT = 0.35
 LOCATION_WEIGHT = 0.2
 TOP_N = 50
 
@@ -260,7 +260,7 @@ def generate_markdown_report(
         f"based on their technical skillset relevance to the **{role_title}** role, "
         f"hireability, and location for positions offering **$250,000 - $400,000** "
         f"total compensation. Contributors were evaluated using a composite scoring "
-        f"algorithm that weights relevant skillset (50%), hireability (30%), and "
+        f"algorithm that weights relevant skillset (45%), hireability (35%), and "
         f"location (20%)."
     )
     lines.append("")
@@ -277,14 +277,16 @@ def generate_markdown_report(
     lines.append("")
     lines.append("Each contributor is scored on two dimensions:")
     lines.append("")
+    key_skills = rc.get("key_skills", [])
+    skills_str = ", ".join(key_skills) if key_skills else "relevant technical skills"
     lines.append("| Dimension | Weight | Description |")
     lines.append("|-----------|--------|-------------|")
     lines.append(
-        "| Relevant Skillset | 50% | RL experience, LLM/agent work, Python proficiency, "
-        "contributions to OpenClaw or similar projects |"
+        f"| Relevant Skillset | 45% | Experience with {skills_str}, "
+        f"contributions to relevant open-source projects |"
     )
     lines.append(
-        "| Hireability | 30% | Likelihood of accepting a $250k-$400k offer, considering "
+        "| Hireability | 35% | Likelihood of accepting a $250k-$400k offer, considering "
         "current role, career stage, accessibility, and financial incentive |"
     )
     lines.append(
@@ -292,7 +294,7 @@ def generate_markdown_report(
         "Within US (3), Outside US (1) |"
     )
     lines.append("")
-    lines.append("**Composite Score** = 0.5 x Skillset + 0.3 x Hireability + 0.2 x Location (max 5.0)")
+    lines.append("**Composite Score** = 0.45 x Skillset + 0.35 x Hireability + 0.2 x Location (max 5.0)")
     lines.append("")
     lines.append(
         "Hireability was re-assessed by Claude with specific context about the $250k-$400k "
@@ -329,14 +331,14 @@ def generate_markdown_report(
 
     lines.append("")
 
-    # Detailed profiles for top 10
-    top_10 = ranked_candidates[:10]
+    # Detailed profiles for top 20
+    top_20 = ranked_candidates[:20]
     lines.append("---")
     lines.append("")
-    lines.append("## Detailed Profiles (Top 10)")
+    lines.append("## Detailed Profiles (Top 20)")
     lines.append("")
 
-    for c in top_10:
+    for c in top_20:
         lines.append(f"### #{c['rank']}. {c['name']} (@{c['username']})")
         lines.append("")
         lines.append(f"**Repository:** {c['repository']}")
